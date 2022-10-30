@@ -1,0 +1,78 @@
+﻿@page "/xedetail"
+@page "/xedetail/{id:int}"
+@using CarManager.Models
+@inject IXeService XekhachServices
+@inject NavigationManager NavigationManager
+<h3>Tạo chuyến xe khách</h3>
+<EditForm Model="xekhach" OnSubmit="HandleSubmit">
+    <div>
+        <label for="xeId">xeId</label>
+        <InputText id="xeId" @bind-Value="xekhach.XeId" class="form-control"/>
+    </div>
+    <div>
+        <label for="tenXe">tenXe</label>
+        <InputText id="tenXe" @bind-Value="xekhach.TenXe" class="form-control" />
+    </div>
+    <div>
+        <label for="bienso">Bien so</label>
+        <InputText id="bienso" @bind-Value="xekhach.BienSo" class="form-control" />
+    </div>
+    <div>
+        <label for="taitrong">Tai trong</label>
+        <InputText id="taitrong" @bind-Value="xekhach.TaiTrong" class="form-control" />
+    </div>
+    <div>
+        <label for="taitrong">Hang hoa</label>
+        <InputText id="taitrong" @bind-Value="xekhach.HangHoa" class="form-control" />
+    </div>
+    <div>
+        <label for="tuyenduongid">Tuyen duong Id</label>
+        <InputNumber id="tuyenduongid" @bind-Value="xekhach.TuyenDuongId" class="form-control" />
+    </div>
+    <div>
+        <label for="gheid">Ghe Id</label>
+        <InputNumber id="gheid" @bind-Value="xekhach.GheId" class="form-control" />
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">@btnText</button>
+
+    <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button>
+    <button type="button" class="btn btn-danger" @onclick="Delete">Delete</button>
+</EditForm>
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    Xe xekhach = new Xe();
+    string btnText = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        btnText = Id == null ? "Save" : "Update";
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            xekhach = await XekhachServices.GetIdXe((int)Id);
+        }
+    }
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await XekhachServices.CreateXe(xekhach);
+        }else{
+            await XekhachServices.UpdateXe(Id, xekhach);
+        }
+    }
+    async Task Cancel()
+    {
+        NavigationManager.NavigateTo("/carmanage");
+    }
+    async Task Delete()
+    {
+        await XekhachServices.DeleteXe(xekhach.Id);
+        NavigationManager.NavigateTo("/carmanage");
+    }
+
+
+}

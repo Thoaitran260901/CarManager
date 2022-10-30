@@ -1,0 +1,175 @@
+﻿@page "/booking"
+@using CarManager.Models
+@inject IXeService XekhachServices
+<style>
+    .Width {
+        width: 200px;
+    }
+</style>
+<h3>BookManager</h3>
+
+<div >
+    <div style="text-align:center">
+        <h3>Sơ đồ xe</h3>
+    </div>
+    <div style="
+            margin-left:290px;
+            border:2px solid; 
+            width:138px; 
+            height:280px;
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;"
+    >
+        <div style="margin-top:13px; margin-left:5px">
+            <div class="btn-group">
+                <input type="button" class="btn-check" value="taixe" id="taixe" >
+                <label style="width:22px;height:22px;border: 2px solid blue"  for="taixe"></label>
+            </div>
+        </div>
+        <br />
+        <div >
+            <div class="btn-group "  style="text-align:center">
+                <input type="button" class="btn-check" id="A1">
+                <label style="font-size:14px;width:30px; border:2px solid blue" for="A1">A1</label>
+
+                <input type="button" class="btn-check" id="A2" >
+                <label  style="font-size:14px;width:30px; border:2px solid blue" for="A2">A2</label>
+
+                <input type="button" class="btn-check" id="A3" >
+                <label style="margin-left:15px;width:30px;font-size:14px; border:2px solid blue" for="A3">A3</label>
+
+                <input type="button" class="btn-check" id="A4">
+                <label style="font-size:14px;width:30px; border:2px solid blue" for="A4">A4</label>
+            </div>
+            <br />
+            <br />
+            <div class="btn-group" style="text-align:center">
+                <input type="button" class="btn-check" id="A5">
+                <label style="font-size:14px;width:30px; border:2px solid blue" for="A5">A5</label>
+
+                <input type="button" class="btn-check" id="A6" >
+                <label  style="font-size:14px; width:30px;border:2px solid blue" for="A6">A6</label>
+
+                <input type="button" class="btn-check" id="A7" >
+                <label style="margin-left:15px;width:30px;font-size:14px; border:2px solid blue" for="A7">A7</label>
+
+                <input type="button" class="btn-check" id="A8">
+                <label style="font-size:14px;width:30px; border:2px solid blue" for="A8">A8</label>
+            </div>
+            <br />
+            <br />
+            <div class="btn-group"  style="text-align:center;margin-top:10px">
+                <input type="button" class="btn-check" id="A9">
+                <label style="font-size:14px;width:30px; border:2px solid blue" for="A9">A9</label>
+
+                <input type="button" class="btn-check" id="A10" >
+                <label  style="font-size:14px; width:30px;border:2px solid blue" for="A10">A10</label>
+
+                <input type="button" class="btn-check" id="A11" >
+                <label style="margin-left:15px;width:30px;font-size:14px; border:2px solid blue" for="A11">A11</label>
+
+                <input type="button" class="btn-check" id="A12">
+                <label style="font-size:14px; width:30px;border:2px solid blue" for="A12">A12</label>
+            </div>
+            <br />
+            <br />
+            <div class="btn-group"  style="text-align:center">
+                <input type="button" class="btn-check" id="A13">
+                <label style="font-size:14px; width:30px;border:2px solid blue" for="A13">A13</label>
+
+                <input type="button" class="btn-check" id="A14" >
+                <label  style="font-size:14px;width:30px; border:2px solid blue" for="A14">A14</label>
+
+                <input type="button" class="btn-check" id="A15" >
+                <label style="margin-left:15px;width:30px;font-size:14px; border:2px solid blue" for="A15">A15</label>
+
+                <input type="button" class="btn-check" id="A16">
+                <label style="font-size:14px; width:30px;border:2px solid blue" for="A16">A16</label>
+            </div>
+
+        </div>
+    </div>
+    <br />
+    <br />
+    <EditForm Model="xekhach" OnSubmit="HandleSubmit">
+        <InputSelect id="chonxe" @bind-Value="xekhach.Id" @onclick="SelectValuesXe" class="form-select">
+            <option value="0">-Chọn Xe-</option>
+            @foreach (var xekhach in XekhachServices.Xeservices)
+            {            
+                <option value="@xekhach.Id">@xekhach.TenXe</option>
+            }
+        </InputSelect>
+        <br />
+        <InputSelect id="chonghe" @bind-Value="xekhach.GheId" @onclick="SelectValueGhe" class="form-select">
+            <option value="0">-Chọn Ghe-</option>
+            @foreach (var xekhach in XekhachServices.Gheservices)
+            {
+                <option value="@xekhach.GheId">@xekhach.SoGhe</option>
+            }
+        </InputSelect>
+        <br />
+        <label class="">Số ghế đã được chọn:</label>
+        <br />
+        <div style="border:20px;">
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                @foreach (var item in XekhachServices.CheckGheservices)
+                {
+                    <input type="checkbox" class="btn-check" disabled="true" id="@item.SoGhe" autocomplete="off">
+                    <label style="margin-left:15px" class="btn btn-outline-primary " for="@item.SoGhe">@item.SoGhe</label>
+                }              
+            </div>
+        </div>
+        <br />
+        <label class="">Số ghế chưa được chọn:</label>
+        <br>
+        <div style="border:20px">
+            <div class="btn-group">
+                @foreach (var item in XekhachServices.UnCheckGheservices)
+                {
+                    <input type="button" class="btn-check" id="@item.SoGhe" autocomplete="off">
+                    <label style="
+                            margin-left:15px;
+                            width:50px;
+                            height:40px;
+                            text-align:center;
+                            color:blue;
+                            font-size:18px;
+                            border:1px solid blue" for="@item.SoGhe"
+                    >
+                        @item.SoGhe
+                    </label>
+                }
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </div>
+    </EditForm>
+    
+</div>
+@code {
+
+    Xe xekhach = new Xe();
+    bool checkGhe = false;
+    protected override async Task OnInitializedAsync()
+    {
+        await XekhachServices.CheckGhe();
+        await XekhachServices.UncheckGhe();
+    }
+    private async Task SelectValuesXe()
+    {
+        await XekhachServices.GetXeDetail();
+
+    }
+    async Task HandleSubmit()
+    {  
+        await XekhachServices.UpdateGhe(xekhach.Id, xekhach);   
+    }
+    private async Task SelectValueGhe(){
+        await XekhachServices.GetGheDetail();
+    }
+}

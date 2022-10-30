@@ -1,0 +1,96 @@
+﻿@page "/carmanage"
+@using System.Data
+@using System.IO
+@using System.Text.Json
+@using System.Net.Http.Headers
+@using System.Linq
+@using Newtonsoft.Json
+@using CarManager.Models
+@inject IXeService _xeService
+@inject NavigationManager NavigationManager
+<h3>CarManage</h3>
+<div>
+    <div>
+        <input type="text" placeholder="Nhập tên" @bind-value="searchTerm">
+        <button type="submit" @onclick="(() => SearchTerm())" >Search</button>
+    </div>
+    <br />
+    <div>
+        <button class="btn btn-primary" @onclick="CreateAndEditXekhach">Add Xe</button>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã xe</th>
+            <th>Tên xe</th>
+            <th>Biển số</th>
+            <th>Tải trọng</th>
+            <th>Hàng hóa</th>
+            <th>Nhà Xe</th>
+            <th>Quãng đường</th>
+            <th>Số ghế</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var xekhach in _xeService.Xeservices)
+        {
+            <tr>
+                <td>@xekhach.XeId</td>
+                <td>@xekhach.TenXe</td>
+                <td>@xekhach.BienSo</td>
+                <td>@xekhach.TaiTrong</td>
+                <td>@xekhach.HangHoa</td>
+                <td>@xekhach.NhaXe</td>
+                <td>@xekhach.QuangDuong</td>
+                <td>@xekhach.SoGhe</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => ShowXe(xekhach.Id))"><i class="oi oi-pencil"></i></button>
+                </td>
+            </tr>
+        }
+        @*@foreach(DataRow row in dataTable.Rows)
+        {
+        <tr>
+        @foreach(DataColumn col in dataTable.Columns)
+        {
+        <td>@row[col.ColumnName].ToString()</td>
+        }
+        </tr>
+        }*@
+    </tbody>
+</table>
+@code {
+    private string searchTerm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _xeService.GetXeDetail();
+    }
+
+    void CreateAndEditXekhach()
+    {
+        NavigationManager.NavigateTo("/xedetail");
+    }
+    void ShowXe(int id)
+    {
+        NavigationManager.NavigateTo($"xedetail/{id}");
+    }
+    async void SearchTerm()
+    {
+        await _xeService.Search(searchTerm);
+
+    }
+    //async void KeySearch(KeyboardEventArgs ev)
+    //{
+    //    if (ev.Key == "Enter")
+    //    {
+    //        foreach (var item in _xeService.Xeservices)
+    //        {
+    //            searchTerm = item.TenXe;
+    //            SearchTerm();
+    //        }
+    //    }
+    //}
+}

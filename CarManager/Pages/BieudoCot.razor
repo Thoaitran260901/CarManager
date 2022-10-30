@@ -1,0 +1,52 @@
+﻿@page "/bieudocot"
+@using System.Data
+@using System.IO
+@using System.Text.Json
+@using System.Net.Http.Headers
+@using System.Linq
+@using Newtonsoft.Json
+@using CarManager.Models
+@using ChartJs.Blazor.BarChart
+@inject IXeService XekhachServices
+<h3>Biểu Đồ</h3>
+<Chart Config="_barConfig"></Chart>
+
+
+@code {
+    Xe xekhach = new Xe();
+    private BarConfig _barConfig;
+    protected override void OnInitialized()
+    {
+        ConfigurePieConfig();
+    }
+    private void ConfigurePieConfig()
+    {
+        _barConfig = new BarConfig();
+        _barConfig.Options = new BarOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Biểu đồ xe"
+                }
+            };
+        foreach (var xekhach in new[] { "test1", "test2", "test3", "test4", "test5", "test6" })
+        {
+            _barConfig.Data.Labels.Add(xekhach);
+        }
+        var dataset = new BarDataset<int>(new[] {  30, 50, 60, 70, 65, 40 })
+            {
+                BackgroundColor = new[]
+                {
+                ColorUtil.ColorHexString(255,0,0),
+                ColorUtil.ColorHexString(0,255,0),
+                ColorUtil.ColorHexString(0,0,255),
+                ColorUtil.ColorHexString(255,0,0),
+                ColorUtil.ColorHexString(0,255,0),
+                ColorUtil.ColorHexString(0,0,255)
+            }
+            };
+        _barConfig.Data.Datasets.Add(dataset);
+    }
+}

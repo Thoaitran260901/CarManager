@@ -1,0 +1,142 @@
+﻿@page "/"
+@using System.Data
+@using System.IO
+@using System.Text.Json
+@using System.Net.Http.Headers
+@using System.Linq
+@using ChartJs.Blazor.Common
+@using ChartJs.Blazor.Util
+@using Newtonsoft.Json
+@using CarManager.Models
+@using CarManager.Dtos.BusDto
+@using ChartJs.Blazor.PieChart
+@using ChartJs.Blazor.BarChart
+@inject IXeService XekhachServices
+<h3>Biểu Đồ</h3>
+@if (XekhachServices.BieuDoservices.Count > 0)
+{
+    <div>
+        <Chart Config="_pieConfig"></Chart>
+    </div>
+}
+<br />
+@if (XekhachServices.BieuDoservices.Count > 0)
+{
+    <div>
+        <Chart Config="_barConfig"></Chart>
+    </div>
+}
+
+<button class="btn btn-primary" @onclick="(() => Bieudo())"><i class="oi oi-pencil">Generget</i></button>
+
+
+
+@code {
+    Xe xe = new Xe();
+    List<BieudoDTO> BieudodataXe = new List<BieudoDTO>();
+    BieudoDTO data = new BieudoDTO();
+    private PieConfig _pieConfig;
+    private BarConfig _barConfig;
+    protected override void OnInitialized()
+    {
+        
+        ConfigureBarConfig();
+        ConfigurePieConfig();
+    }
+    async void Bieudo(){
+        await XekhachServices.bieudo();
+        ConfigureBarConfig();
+        ConfigurePieConfig();
+    }
+    private void ConfigurePieConfig()
+    {
+        var totalData = new PieDataset<int>();
+        _pieConfig = new PieConfig();
+        _pieConfig.Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Biểu đồ xe"
+                }
+            };
+        foreach (var xekhach in XekhachServices.BieuDoservices)
+        {
+            _pieConfig.Data.Labels.Add(xekhach.TenXe);
+
+            var dataset = new PieDataset<int>
+            {
+                    BackgroundColor = new[]
+                    {
+                            ColorUtil.ColorHexString(255,0,0),
+                            ColorUtil.ColorHexString(0,255,0),
+                            ColorUtil.ColorHexString(0,0,255),
+                            ColorUtil.ColorHexString(128,128,0),
+                            ColorUtil.ColorHexString(255,0,255),
+                            ColorUtil.ColorHexString(255,255,0),
+                            ColorUtil.ColorHexString(255,127,36),
+                            ColorUtil.ColorHexString(238,18,137),
+                            ColorUtil.ColorHexString(191,62,255),
+                            ColorUtil.ColorHexString(236,171,83),
+                    }
+            };
+            for (var i = 0; i < XekhachServices.BieuDoservices.Count; i++)
+            {
+                dataset.Add(XekhachServices.BieuDoservices[i].TaiTrong);
+
+            }
+            totalData = dataset;
+        }
+        _pieConfig.Data.Datasets.Add(totalData);
+    }
+
+    private void ConfigureBarConfig()
+    {
+        var totalData = new BarDataset<int>();
+        _barConfig = new BarConfig();
+        _barConfig.Options = new BarOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Biểu đồ xe"
+                }
+            };
+
+        foreach (var xekhach in XekhachServices.BieuDoservices)
+        {
+            _barConfig.Data.Labels.Add(xekhach.TenXe);
+
+            var dataset = new BarDataset<int>
+            {
+                    
+                    BackgroundColor = new[]
+                                        {
+                        ColorUtil.ColorHexString(255, 0, 0),
+                        ColorUtil.ColorHexString(0, 255, 0),
+                        ColorUtil.ColorHexString(0, 0, 255),
+                        ColorUtil.ColorHexString(255, 0, 0),
+                        ColorUtil.ColorHexString(0, 255, 0),
+                        ColorUtil.ColorHexString(0, 0, 255),
+                        ColorUtil.ColorHexString(238,18,137),
+                        ColorUtil.ColorHexString(191,62,255),
+                        ColorUtil.ColorHexString(236,171,83),
+                    },
+                   
+            };
+
+            
+            for (var i = 0; i < XekhachServices.BieuDoservices.Count; i++)
+            {
+                dataset.Add(XekhachServices.BieuDoservices[i].TaiTrong);
+
+            }
+            totalData = dataset;
+        }
+        
+        _barConfig.Data.Datasets.Add(totalData);
+        
+    }
+}

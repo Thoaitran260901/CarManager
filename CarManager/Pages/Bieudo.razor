@@ -1,0 +1,49 @@
+﻿@page "/bieudo"
+@using System.Data
+@using System.IO
+@using System.Text.Json
+@using System.Net.Http.Headers
+@using System.Linq
+@using Newtonsoft.Json
+@using CarManager.Models
+@using ChartJs.Blazor.PieChart
+@inject IXeService XekhachServices
+<h3>Biểu Đồ</h3>
+<Chart Config="_pieConfig"></Chart>
+            
+
+@code {
+    Xe xekhach = new Xe();
+    private PieConfig _pieConfig;
+    protected override void OnInitialized()
+    {
+        ConfigurePieConfig();
+    }
+    private void ConfigurePieConfig()
+    {
+        _pieConfig = new PieConfig();
+        _pieConfig.Options = new PieOptions
+        {
+            Responsive = true,
+            Title = new OptionsTitle
+            {
+                Display = true,
+                Text = "Biểu đồ xe"
+            }
+        };
+        foreach (var xekhach in new[] { "test1", "test2","test3" })
+        {
+            _pieConfig.Data.Labels.Add(xekhach);
+        }
+        var dataset = new PieDataset<int>(new[] { 15, 50, 60 })
+        {
+            BackgroundColor = new[]
+            {
+                ColorUtil.ColorHexString(255,0,0),
+                ColorUtil.ColorHexString(0,255,0),
+                ColorUtil.ColorHexString(0,0,255)
+            }
+        };
+        _pieConfig.Data.Datasets.Add(dataset);
+    }
+}
